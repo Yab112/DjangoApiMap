@@ -8,6 +8,7 @@ import requests
 import json
 import os
 from dotenv import load_dotenv
+from requests import Response  # Import the Response object
 
 # Load environment variables
 load_dotenv()
@@ -30,10 +31,14 @@ def get_route(request):
 
             # OpenRouteService API call
             url = "https://api.openrouteservice.org/v2/directions/driving-car"
-            headers = {"Authorization": ORS_API_KEY, "Content-Type": "application/json"}
+            headers = {"Authorization": ORS_API_KEY,  'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+    'Content-Type': 'application/json; charset=utf-8'}
             params = {"coordinates": coordinates, "format": "json"}
 
-            response = requests.post(url, headers=headers, json=params)
+            response: Response = requests.post('https://api.openrouteservice.org/v2/directions/driving-car/json', json=params, headers=headers)
+
+            
+
             return JsonResponse(response.json())
 
         except Exception as e:
